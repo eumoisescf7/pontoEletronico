@@ -12,14 +12,12 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "public")
 public class RelatorioPonto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
-    @JoinColumn(name = "created_on")
     private LocalDateTime dataCriacao;
 
 }
