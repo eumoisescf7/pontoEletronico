@@ -15,7 +15,7 @@ public class PontoController {
     PontoService service;
 
     @PostMapping
-    public void insertCard() {
+    public void enviarPonto() {
         service.cadastrarPonto();
     }
 
