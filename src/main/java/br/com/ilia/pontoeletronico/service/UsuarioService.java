@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UsuarioService {
 
     private final UsuarioRepository repository;

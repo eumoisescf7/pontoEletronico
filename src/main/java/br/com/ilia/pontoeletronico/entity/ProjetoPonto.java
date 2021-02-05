@@ -10,25 +10,24 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RelatorioPonto {
+public class ProjetoPonto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String usuario;
-    private LocalDate diaTrabalhado;
-    private Long horasExcedentes;
-    private Long horaDevidas;
-    private Long horasTrabalhadas;
+    private LocalDate dia;
     @ManyToOne
-    @JoinColumn(name = "ponto_id")
     @NotNull(message = Messages.POINT_VALUE_REQUERID)
-    private Ponto ponto;
-
+    @JoinColumn(name = "projeto_id")
+    private Projeto projeto;
+    @ManyToOne
+    @JoinColumn(name = "relatorio_ponto_id")
+    @NotNull(message = Messages.POINT_VALUE_REQUERID)
+    private RelatorioPonto relatorioPonto;
+    private Long horasAtribuidas;
 }

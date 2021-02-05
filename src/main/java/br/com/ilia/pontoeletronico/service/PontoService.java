@@ -11,12 +11,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Optional;
 
 @Service
@@ -24,13 +29,12 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class PontoService {
 
-
     public static final int VALOR = 0;
     private final PontoRepository pontoRepository;
     private final UsuarioService usuarioService;
     private final RelatorioPontoRepository relatorioPontoRepository;
 
-    public Ponto cadastrarPonto(String cpf) throws Exception {
+    public ResponseEntity<?> cadastrarPonto(String cpf) throws Exception {
 
         Optional<Ponto> responsePonto = pontoRepository.findByDiaAndCpf(LocalDate.now(), cpf);
         Usuario usuario = usuarioService.buscarUsuario(cpf).orElseThrow(() -> new Exception("Usuário não encontrado para o CPF: " + cpf));
@@ -44,19 +48,26 @@ public class PontoService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
-        if (!responsePonto.isPresent()) {
+        try {
+            var verificarFinalDeSemana = this.FinalSemana(LocalDate.now());
+            if (verificarFinalDeSemana == true) {
+                return new ResponseEntity("Ponto não permitido, final de semana!", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
 
-            return pontoRepository.save(Ponto.builder()
+
+        if (!responsePonto.isPresent()) {
+            return new ResponseEntity(pontoRepository.save(Ponto.builder()
                     .dia(LocalDate.now())
                     .entrada1(LocalDateTime.now())
                     .cpf(cpf)
                     .usuario(usuario.getNome())
-                    .build());
+                    .build()), HttpStatus.OK);
         }
 
-
         valor = this.verificarPonto(ponto);
-
 
         switch (valor) {
             case 1:
@@ -74,24 +85,23 @@ public class PontoService {
 
         try {
             if (valor != StatusPontoEnum.NAO_ENCONTRADO.getCode())
-                return pontoRepository.save(ponto);
+                return new ResponseEntity(pontoRepository.save(ponto), HttpStatus.OK);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
         return null;
     }
 
-    public Ponto pontoFinal(Ponto ponto, Usuario usuario){
+    private Ponto pontoFinal(Ponto ponto, Usuario usuario){
 
         LocalDateTime horaFinal = LocalDateTime.now();
         ponto.setSaida2(horaFinal);
 
-        Integer pontoTrabalhado = 0;
         relatorioPontoRepository.save(RelatorioPonto.builder()
                 .diaTrabalhado(ponto.getDia())
-                .horaDevidas(pontoTrabalhado)
-                .horasExcedentes(pontoTrabalhado)
-                .horasTrabalhadas(pontoTrabalhado)
+                .horaDevidas(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-9L)
+                .horasExcedentes(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-9L)
+                .horasTrabalhadas(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-1L)
                 .usuario(usuario.getCpf())
                 .ponto(ponto).build());
         return pontoRepository.save(ponto);
@@ -105,8 +115,8 @@ public class PontoService {
             LocalDateTime limiteTempoAlmoco = ponto
                     .getSaida1()
                     .plus(60, ChronoUnit.MINUTES);
-            if (limiteTempoAlmoco.isAfter(LocalDateTime.now())) {
-                throw new Exception("HORÁRIO DE ALMOÇO DENTRO DO PERÍDO ESTABELECIDO");
+            if (limiteTempoAlmoco.isBefore(LocalDateTime.now())) {
+                throw new Exception("Horário de almoço dentro do período estabelecido, hora: "+limiteTempoAlmoco);
             } else if (ponto.getEntrada2() == null) {
                 return StatusPontoEnum.detect(2).getCode();
             }
@@ -114,5 +124,10 @@ public class PontoService {
             return StatusPontoEnum.detect(3).getCode();
 
         return StatusPontoEnum.detect(4).getCode();
+    }
+
+    public static boolean FinalSemana(LocalDate data) {
+        DayOfWeek dia = data.getDayOfWeek();
+            return dia == DayOfWeek.SATURDAY || dia == DayOfWeek.SUNDAY;
     }
 }

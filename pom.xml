@@ -32,6 +32,23 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>2.2.1.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<version>1.0.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.2.4.Final</version>
+		</dependency>
 
 
 		<dependency>
@@ -46,22 +63,15 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<version>2.4.2</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>3.0.0-SNAPSHOT</version>
+			<version>3.0.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework.plugin</groupId>
@@ -69,22 +79,19 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>3.0.0-SNAPSHOT</version>
+			<version>3.0.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-spring-webflux</artifactId>
-			<version>3.0.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.plugin</groupId>
-					<artifactId>spring-plugin-core</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>3.0.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.plugin</groupId>
 			<artifactId>spring-plugin-core</artifactId>
@@ -100,15 +107,25 @@
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
-			<version>1.0.0.GA</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>4.0.2.GA</version>
+			<version>2.0.1.Final</version>
 		</dependency>
 
-    </dependencies>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
