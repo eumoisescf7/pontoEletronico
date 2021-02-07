@@ -1,6 +1,6 @@
 package br.com.ilia.pontoeletronico.controller;
 
-import br.com.ilia.pontoeletronico.service.ProjetoService;
+import br.com.ilia.pontoeletronico.service.ProjetoPontoService;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ProjetoController {
 
-    private final ProjetoService service;
+    private final ProjetoPontoService service;
 
 
     @ApiOperation(value = "Agregar um dia de trabalho para um projeto")

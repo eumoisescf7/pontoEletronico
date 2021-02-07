@@ -24,7 +24,7 @@ public class RelatorioPonto {
     private String usuario;
     private LocalDate diaTrabalhado;
     private Long horasExcedentes;
-    private Long horaDevidas;
+    private Long horasDevidas;
     private Long horasTrabalhadas;
     @ManyToOne
     @JoinColumn(name = "ponto_id")

@@ -41,7 +41,7 @@ public class RelatorioPontoController {
     public ResponseEntity<?> relatorioPontos(@NotNull @PathVariable("dataInicio") String dataInicio,
                                              @PathVariable("dataFim") String dataFim){
         try {
-            return new ResponseEntity<>(service.gerarRelatorio(LocalDate.parse(dataInicio), LocalDate.parse(dataFim)), HttpStatus.OK);
+            return new ResponseEntity<>(service.gerarRelatorio(dataInicio, dataFim), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

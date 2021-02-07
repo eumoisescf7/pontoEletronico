@@ -9,7 +9,6 @@ import br.com.ilia.pontoeletronico.repository.RelatorioPontoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ExpressionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,15 +17,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.Optional;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Service
 public class PontoService {
 
     public static final int VALOR = 0;
@@ -99,7 +95,7 @@ public class PontoService {
 
         relatorioPontoRepository.save(RelatorioPonto.builder()
                 .diaTrabalhado(ponto.getDia())
-                .horaDevidas(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-9L)
+                .horasDevidas(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-9L)
                 .horasExcedentes(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-9L)
                 .horasTrabalhadas(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-1L)
                 .usuario(usuario.getCpf())

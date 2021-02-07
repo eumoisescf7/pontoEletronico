@@ -20,7 +20,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class ProjetoService {
+public class ProjetoPontoService {
 
     private final RelatorioPontoRepository relatorioPontoRepository;
     private final ProjetoRepository projetoRepository;
@@ -29,11 +29,12 @@ public class ProjetoService {
     public ResponseEntity<?> agregarDiaProjeto(String data, String cpf, String projeto, String hora) throws Exception {
 
         var responseProjeto = projetoRepository.findById(Long.parseLong(projeto)).orElseThrow(() -> new Exception("Projeto de ID: " + projeto + " não encontrado "));
-        Optional<RelatorioPonto> relatorioPonto = Optional.ofNullable(relatorioPontoRepository.findByDiaTrabalhadoAndUsuario(LocalDate.parse(data), cpf).orElseThrow(() -> new Exception("Relatorio do dia " + data + " não encontrado")));
+        Optional<RelatorioPonto> responseRelatorioPonto = Optional.ofNullable((relatorioPontoRepository.findByDiaTrabalhadoAndUsuario(LocalDate.parse(data), cpf).orElseThrow(() -> new Exception("Relatorio do dia " + data + " não encontrado"))));
         List<ProjetoPonto> listaProjetoPonto = projetoPontoRepository.findByDia(LocalDate.parse(data));
         try {
-            if (relatorioPonto.isPresent() && relatorioPonto.get().getHorasTrabalhadas() <= Long.parseLong(hora)) {
+            if (responseRelatorioPonto.isPresent() && responseRelatorioPonto.get().getHorasTrabalhadas() >= Long.parseLong(hora)) {
 
+                RelatorioPonto relatorioPonto = responseRelatorioPonto.get();
                 var sum = listaProjetoPonto.stream()
                         .mapToLong(t -> t.getHorasAtribuidas())
                         .sum();
@@ -41,11 +42,11 @@ public class ProjetoService {
                 var totalHoras = sum + Long.parseLong(hora);
 
                 try {
-                    if (totalHoras <= relatorioPonto.get().getHorasTrabalhadas()) {
+                    if (totalHoras <= relatorioPonto.getHorasTrabalhadas()) {
                         return new ResponseEntity<>(projetoPontoRepository.save(ProjetoPonto.builder()
-                                .dia(relatorioPonto.get().getDiaTrabalhado())
+                                .dia(relatorioPonto.getDiaTrabalhado())
                                 .projeto(responseProjeto)
-                                .relatorioPonto(relatorioPonto.get())
+                                .relatorioPonto(relatorioPonto)
                                 .horasAtribuidas(Long.parseLong(hora))
                                 .build()), HttpStatus.OK);
                     }
@@ -53,7 +54,7 @@ public class ProjetoService {
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
                 }
 
-                return new ResponseEntity<>("Limite de horas para esse dia excede: ", HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("Limite de horas excede o tempo trabalho nesse dia: ", HttpStatus.INTERNAL_SERVER_ERROR);
 
             }
         } catch (Exception e) {

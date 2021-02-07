@@ -1,9 +1,8 @@
-package br.com.ilia.pontoeletronico;
+package br.com.ilia.pontoeletronico.pontoTest;
 
 
 import br.com.ilia.pontoeletronico.entity.Ponto;
 import br.com.ilia.pontoeletronico.service.PontoService;
-import org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
-public class CadastroPontoTeste {
+public class PontoServiceTest {
 
     @Autowired
     PontoService pontoService;
@@ -27,13 +26,25 @@ public class CadastroPontoTeste {
 
         var ponto = (ResponseEntity<Ponto>) pontoService.cadastrarPonto("11111111111");
         assertEquals("11111111111", ponto.getBody().getCpf());
-        assertEquals("Teste", ponto.getBody().getUsuario());
+        assertEquals("DIOGO", ponto.getBody().getUsuario());
     }
 
+    @Test
     public void should_save_ponto_with_error() throws Exception {
 
-        var ponto = (ResponseEntity<Ponto>) pontoService.cadastrarPonto("1111");
-        assertEquals("1111", ponto.getBody().getCpf());
+        var ponto = (ResponseEntity<Ponto>) pontoService.cadastrarPonto("11111111111");
+        assertEquals("222222222222", ponto.getBody().getCpf());
         assertEquals("Teste", ponto.getBody().getUsuario());
     }
+
+    @Test
+    public void should_save_weekend_with_error () throws Exception {
+        var ponto = pontoService.cadastrarPonto("11111111111");
+        assertEquals("Ponto não permitido, final de semana!", ponto.getBody());
+    }
+
+
+
+
+
 }
