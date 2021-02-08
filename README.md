@@ -1,6 +1,6 @@
-#Ponto Eletrônico
+# Ponto Eletrônico
 
-###Indice
+### 📍Indice
 
 - [Sobre](#-sobre-s)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
@@ -12,7 +12,7 @@ O projeto **Ponto Eletrônico** permite que usuários consigam cadastrar seus po
 de trabalho, visando assim registrar sua carga horária. O projeto também oferece uma opção que
 gera um relatório mensal de todo os usuários que realizaram seus registros no sistema.
 
-#### 💻Tecnologias Utilizadas
+### 💻Tecnologias Utilizadas
 
 Java 11\
 SpringBoot\
