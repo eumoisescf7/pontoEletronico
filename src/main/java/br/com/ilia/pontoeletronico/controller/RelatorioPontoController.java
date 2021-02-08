@@ -1,6 +1,5 @@
 package br.com.ilia.pontoeletronico.controller;
 
-import br.com.ilia.pontoeletronico.entity.RelatorioPonto;
 import br.com.ilia.pontoeletronico.service.RelatorioPontoService;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
@@ -13,9 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequestMapping("relatorio-ponto")
@@ -26,22 +22,21 @@ public class RelatorioPontoController {
     private final RelatorioPontoService service;
 
 
-    @ApiOperation(value = "Relatorio ponto eletrônico")
+    @ApiOperation(value = "Relatório ponto eletrônico")
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "Retorna um relatório de todo o ponto realizado"),
+                    message = "Retorna um relatório mensal de todos os pontos realizados"),
             @ApiResponse(
                     code = 500,
                     message = "Ocorreu um erro ao processa a requisição"
             ),
     })
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{dataInicio}/{dataFim}")
-    public ResponseEntity<?> relatorioPontos(@NotNull @PathVariable("dataInicio") String dataInicio,
-                                             @PathVariable("dataFim") String dataFim){
+    @GetMapping("/{data}")
+    public ResponseEntity<?> relatorioPontos(@NotNull @PathVariable("data") String data){
         try {
-            return new ResponseEntity<>(service.gerarRelatorio(dataInicio, dataFim), HttpStatus.OK);
+            return new ResponseEntity<>(service.gerarRelatorio(data), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

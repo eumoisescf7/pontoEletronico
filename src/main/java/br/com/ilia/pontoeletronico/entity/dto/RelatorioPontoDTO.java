@@ -1,24 +1,28 @@
 package br.com.ilia.pontoeletronico.entity.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.Date;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data @Builder @NoArgsConstructor @AllArgsConstructor @Getter @ Setter
 public class RelatorioPontoDTO {
 
-    private Long id;
-    private String usuario;
-    private LocalDate diaTrabalhado;
-    private Integer horasExcedentes;
-    private Integer horaDevidas;
-    private Integer horasTrabalhadas;
-    private Long projeto;
+    private BigInteger id;
+    private Date diaTrabalhado;
+    private String cpf;
+    private String nome;
+    private BigInteger horasDevidas;
+    private BigInteger horasExcedentes;
+    private BigInteger horasTrabalhadas;
+    private BigInteger pontoId;
+    private BigInteger horasAtribuidas;
+    private BigInteger relatorioPontoId;
+    private Timestamp entrada1;
+    private Timestamp saida1;
+    private Timestamp entrada2;
+    private Timestamp saida2;
+    private String nomeProjeto;
 
 }

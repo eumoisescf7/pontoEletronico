@@ -29,7 +29,7 @@ public class ProjetoPontoService {
     public ResponseEntity<?> agregarDiaProjeto(String data, String cpf, String projeto, String hora) throws Exception {
 
         var responseProjeto = projetoRepository.findById(Long.parseLong(projeto)).orElseThrow(() -> new Exception("Projeto de ID: " + projeto + " não encontrado "));
-        Optional<RelatorioPonto> responseRelatorioPonto = Optional.ofNullable((relatorioPontoRepository.findByDiaTrabalhadoAndUsuario(LocalDate.parse(data), cpf).orElseThrow(() -> new Exception("Relatorio do dia " + data + " não encontrado"))));
+        Optional<RelatorioPonto> responseRelatorioPonto = Optional.ofNullable((relatorioPontoRepository.findByDiaTrabalhadoAndUsuario(LocalDate.parse(data), cpf).orElseThrow(() -> new Exception("Ponto do dia " + data + " não encontrado"))));
         List<ProjetoPonto> listaProjetoPonto = projetoPontoRepository.findByDia(LocalDate.parse(data));
         try {
             if (responseRelatorioPonto.isPresent() && responseRelatorioPonto.get().getHorasTrabalhadas() >= Long.parseLong(hora)) {

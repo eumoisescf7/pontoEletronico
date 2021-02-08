@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("add-ponto-projeto")
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class ProjetoController {
+public class ProjetoPontoController {
 
     private final ProjetoPontoService service;
 
 
-    @ApiOperation(value = "Agregar um dia de trabalho para um projeto")
+    @ApiOperation(value = "Agregar horas trabalho para um projeto específico")
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "Retorna uma entidade criada para um dia/projeto"),
+                    message = "Retorna uma entidade criada para hora/projeto"),
             @ApiResponse(
                     code = 500,
                     message = "Ocorreu um erro ao processa a requisição"

@@ -26,6 +26,7 @@ import java.util.Optional;
 public class PontoService {
 
     public static final int VALOR = 0;
+    public static final long LONG_ZERO = 0L;
     private final PontoRepository pontoRepository;
     private final UsuarioService usuarioService;
     private final RelatorioPontoRepository relatorioPontoRepository;
@@ -34,7 +35,7 @@ public class PontoService {
 
         Optional<Ponto> responsePonto = pontoRepository.findByDiaAndCpf(LocalDate.now(), cpf);
         Usuario usuario = usuarioService.buscarUsuario(cpf).orElseThrow(() -> new Exception("Usuário não encontrado para o CPF: " + cpf));
-        Integer valor = VALOR;
+        var valor = VALOR;
         Ponto ponto = new Ponto();
 
         try {
@@ -46,11 +47,11 @@ public class PontoService {
 
         try {
             var verificarFinalDeSemana = this.FinalSemana(LocalDate.now());
-            if (verificarFinalDeSemana == true) {
-                return new ResponseEntity("Ponto não permitido, final de semana!", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+           if (verificarFinalDeSemana == true) {
+               return new ResponseEntity("Ponto não permitido, final de semana!", HttpStatus.INTERNAL_SERVER_ERROR);
+           }
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+           throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
 
@@ -95,9 +96,9 @@ public class PontoService {
 
         relatorioPontoRepository.save(RelatorioPonto.builder()
                 .diaTrabalhado(ponto.getDia())
-                .horasDevidas(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-9L)
-                .horasExcedentes(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-9L)
-                .horasTrabalhadas(ChronoUnit.HOURS.between(horaFinal, ponto.getEntrada1())-1L)
+                .horasDevidas(calcHoras(ponto,  horaFinal, 1))
+                .horasExcedentes(calcHoras(ponto, horaFinal, 2))
+                .horasTrabalhadas(calcHoras(ponto, horaFinal, 3))
                 .usuario(usuario.getCpf())
                 .ponto(ponto).build());
         return pontoRepository.save(ponto);
@@ -110,7 +111,7 @@ public class PontoService {
         } else if (ponto.getSaida1() != null && ponto.getEntrada2() == null) {
             LocalDateTime limiteTempoAlmoco = ponto
                     .getSaida1()
-                    .plus(60, ChronoUnit.MINUTES);
+                    .plus(60, ChronoUnit.MINUTES).plus(1, ChronoUnit.SECONDS);
             if (limiteTempoAlmoco.isBefore(LocalDateTime.now())) {
                 throw new Exception("Horário de almoço dentro do período estabelecido, hora: "+limiteTempoAlmoco);
             } else if (ponto.getEntrada2() == null) {
@@ -125,5 +126,31 @@ public class PontoService {
     public static boolean FinalSemana(LocalDate data) {
         DayOfWeek dia = data.getDayOfWeek();
             return dia == DayOfWeek.SATURDAY || dia == DayOfWeek.SUNDAY;
+    }
+
+
+    public Long calcHoras(Ponto ponto, LocalDateTime horaFinal, int type) {
+
+        var valorFinal = LONG_ZERO;
+        var primeiroPeriodo = ChronoUnit.HOURS.between(ponto.getEntrada1(), ponto.getSaida1());
+        var segundoPeriodo = ChronoUnit.HOURS.between(ponto.getEntrada2(), horaFinal);
+
+        var total = primeiroPeriodo + segundoPeriodo;
+
+        switch (type) {
+
+            case 1:
+                valorFinal = total - 8L;
+                if (valorFinal >= LONG_ZERO);
+                    valorFinal = LONG_ZERO;
+                break;
+            case 2:
+                valorFinal = total - 8L;
+                break;
+            case 3:
+                valorFinal = total;
+                break;
+        }
+        return valorFinal;
     }
 }
