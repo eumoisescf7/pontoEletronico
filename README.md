@@ -4,7 +4,7 @@
 
 - [Sobre](#-sobre-s)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [Como Baicar o projeto](#-como-baixar-o-projeto)
+- [Como Baixar o projeto](#-como-baixar-o-projeto)
 
 ### 🏷Sobre
 
