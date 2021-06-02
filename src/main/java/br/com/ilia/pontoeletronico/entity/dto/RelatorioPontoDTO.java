@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@Data @Builder @NoArgsConstructor @AllArgsConstructor @Getter @ Setter
+@Data @Builder @NoArgsConstructor @AllArgsConstructor @Getter @Setter
 public class RelatorioPontoDTO {
 
     private BigInteger id;
